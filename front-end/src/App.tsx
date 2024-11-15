@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css'; // import the css file to enable your styles.
-import { GameState, Cell } from './game';
+import {GameState, Cell} from './game';
 import BoardCell from './Cell';
 
 /**
  * Define the type of the props field for a React component
  */
-interface Props { }
+interface Props {
+}
 
 /**
  * Using generics to specify the type of props and state.
@@ -14,11 +15,11 @@ interface Props { }
  * React will keep track of the value of props and state.
  * Any time there's a change to their values, React will
  * automatically update (not fully re-render) the HTML needed.
- * 
+ *
  * props and state are similar in the sense that they manage
  * the data of this component. A change to their values will
  * cause the view (HTML) to change accordingly.
- * 
+ *
  * Usually, props is passed and changed by the parent component;
  * state is the internal value of the component and managed by
  * the component itself.
@@ -31,10 +32,11 @@ class App extends React.Component<Props, GameState> {
    */
   constructor(props: Props) {
     super(props)
-    /**
-     * state has type GameState as specified in the class inheritance.
-     */
-    this.state = { cells: [] }
+    this.state = {
+      cells: [],
+      currentPlayer: '',
+      winner: ''
+    }
   }
 
   /**
@@ -45,24 +47,42 @@ class App extends React.Component<Props, GameState> {
   newGame = async () => {
     const response = await fetch('/newgame');
     const json = await response.json();
-    this.setState({ cells: json['cells'] });
+    this.setState({
+      cells: json['cells'],
+      currentPlayer: json['currentPlayer'],
+      winner: json['winner']
+    });
   }
 
   /**
    * play will generate an anonymous function that the component
    * can bind with.
-   * @param x 
-   * @param y 
-   * @returns 
+   * @param x
+   * @param y
+   * @returns
    */
   play(x: number, y: number): React.MouseEventHandler {
     return async (e) => {
-      // prevent the default behavior on clicking a link; otherwise, it will jump to a new page.
       e.preventDefault();
-      const response = await fetch(`/play?x=${x}&y=${y}`)
+      const response = await fetch(`/play?x=${x}&y=${y}`);
       const json = await response.json();
-      this.setState({ cells: json['cells'] });
+      console.log("Current Player:", json);
+      this.setState({
+        cells: json['cells'],
+        currentPlayer: json['currentPlayer'],
+        winner: json['winner']
+      });
     }
+  }
+
+  undo = async () => {
+    const response = await fetch('/undo');
+    const json = await response.json();
+    this.setState({
+      cells: json['cells'],
+      currentPlayer: json['currentPlayer'],
+      winner: json['winner']
+    });
   }
 
   createCell(cell: Cell, index: number): React.ReactNode {
@@ -113,15 +133,24 @@ class App extends React.Component<Props, GameState> {
      * can treat HTML elements as code.
      * @see https://reactjs.org/docs/introducing-jsx.html
      */
+    const {currentPlayer, winner} = this.state;
+    let instructions = '';
+    if (winner) {
+      instructions = `Winner: ${winner}`;
+    } else {
+      instructions = `Current Player: ${currentPlayer}`;
+    }
     return (
       <div>
+        <div id="instructions">
+          <h2>{instructions}</h2>
+        </div>
         <div id="board">
           {this.state.cells.map((cell, i) => this.createCell(cell, i))}
         </div>
         <div id="bottombar">
-          <button onClick={/* get the function, not call the function */this.newGame}>New Game</button>
-          {/* Exercise: implement Undo function */}
-          <button>Undo</button>
+          <button onClick={this.newGame}>New Game</button>
+          <button onClick={this.undo}>Undo</button>
         </div>
       </div>
     );

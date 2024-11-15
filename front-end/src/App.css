@@ -1,47 +1,74 @@
 #board {
   display: grid;
-  grid-template-columns: auto auto auto;
-  background-color: #2196F3;
-  padding: 10px
+  grid-template-columns: 1fr 1fr 1fr; /* Equal width for each column */
+  gap: 10px;
+  background-color: #1976d2;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 80vmin; /* Adjusts max width to keep board from being too wide */
+  margin: 0 auto; /* Centers the board */
 }
 
 .cell {
-  background-color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  font-size: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   height: 25vmin;
-  text-align: center;
 }
 
-#bottombar {
-  height: 5vh;
+.cell:hover {
+  background-color: #bbdefb;
+  transform: scale(1.05);
+}
+
+.playable {
+  background-color: #ff7043;
+  color: white;
 }
 
 #instructions {
-  height: 5vh;
-  background-color: white;
-  padding: 0px;
-  margin: 0px;
+  background-color: #ffffff;
+  color: #333;
+  padding: 10px;
+  margin-top: 15px;
   text-align: center;
-  border: 1px solid black;
+  border-radius: 8px;
+  border: 1px solid #1976d2;
+  font-size: 1.2rem;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#bottombar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  height: 5vh;
 }
 
 #bottombar button {
-  width: 50%;
-  /* height: 100%; */
-  margin: 0;
-  padding: 0;
-  position: relative;
-  float: left;
-  font-size: 2vw
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+#bottombar button:hover {
+  background-color: #1565c0;
 }
-
-.playable { background-color: red;}

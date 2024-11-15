@@ -68,4 +68,13 @@ public class Game {
             return board.getCell(1, 1);
         return null;
     }
+
+    public Game undo() {
+        if (this.history.isEmpty()) {
+            return this; // No history to undo
+        }
+        List<Game> newHistory = new ArrayList<>(this.history);
+        Game previousGame = newHistory.remove(newHistory.size() - 1);
+        return new Game(previousGame.board, previousGame.player, newHistory);
+    }
 }
